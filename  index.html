@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>高维度隐秘人格测试</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        p.desc {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        input[type="number"] {
+            width: 80%;
+            padding: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.3s;
+            margin-bottom: 20px;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary);
+        }
+
+        /* 隐藏输入框的上下箭头 */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 80%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        /* 加载界面 */
+        #loading-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .loading-text {
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* 结果界面 */
+        #result-screen {
+            display: none;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .result-title {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .personality-name {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin: 10px 0 20px 0;
+            background: linear-gradient(135deg, #2563eb, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nonsense-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: left;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #334155;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .nonsense-box::before {
+            content: "❝";
+            font-size: 4rem;
+            color: #cbd5e1;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            line-height: 1;
+            font-family: serif;
+        }
+
+        .highlight {
+            color: #b91c1c;
+            font-weight: bold;
+        }
+        
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 第一步：输入界面 -->
+        <div id="input-screen">
+            <h1>高维度隐秘人格鉴定</h1>
+            <p class="desc">基于量子力学与宇宙大数据的权威测试。<br>请输入一个你脑海中浮现的数字，我们将精准推算出你深藏不露的罕见特质。</p>
+            <input type="number" id="user-number" placeholder="输入任意数字 (如: 42)">
+            <button onclick="startTest()">启动深度鉴定</button>
+        </div>
+
+        <!-- 第二步：假装很专业的加载界面 -->
+        <div id="loading-screen">
+            <div class="spinner"></div>
+            <div class="loading-text" id="loading-msg">正在连接宇宙量子波...</div>
+        </div>
+
+        <!-- 第三步：结果界面 -->
+        <div id="result-screen">
+            <div class="result-title">鉴定结果：经过严密测算，你属于极罕见的</div>
+            <div class="personality-name" id="p-name">香蕉人格</div>
+            <div class="nonsense-box" id="p-desc">
+                <!-- 废话将在这里生成 -->
+            </div>
+            <button onclick="resetTest()" style="background-color: #f1f5f9; color: #475569; box-shadow: none;">再测一个数字</button>
+            <div class="disclaimer">© 国际废话心理学研究中心 联合认证</div>
+        </div>
+    </div>
+
+    <script>
+        // 16种奇葩人格名称
+        const personalities = [
+            "香蕉人格", "马赛克人格", "退堂鼓人格", "星期一人格", 
+            "电量1%人格", "复读机人格", "薛定谔人格", "透明胶人格",
+            "水豚人格", "草履虫人格", "鸽子人格", "大蒜人格",
+            "奥特曼人格", "二维码人格", "回车键人格", "空气人格"
+        ];
+
+        // 废话文学语录库（分为 开头、核心震惊点、结论 三部分来随机拼接）
+        
+        const intros = [
+            "真是太不可思议了！通过数字 {num} 的脑电波共振，系统发现你简直是个奇迹。",
+            "大数据显示，全球仅有 0.0001% 的人会测出这个结果。面对真实的你，专家们都震惊了。",
+            "如果你没测这个测试，你可能一辈子都被蒙在鼓里。科学表明，你具备极其特殊的体质。",
+            "经过高达八万次的算力推演，我们发现数字 {num} 背后隐藏着你一个极其深邃的秘密。"
+        ];
+
+        const coreNonsense = [
+            "你这种人太特别了，<span class='highlight'>你吃饭的时候，居然是把食物放进嘴里嚼的！</span>别人根本模仿不来。",
+            "医学界对你的特质感到震撼：<span class='highlight'>如果你晚上闭上眼睛，你竟然会看不见东西！</span>",
+            "你具备一种罕见的生存天赋：<span class='highlight'>当你感到极度口渴的时候，你竟然会想喝水！</span>",
+            "据观测，你有一个惊人的身体机能：<span class='highlight'>你每呼吸六十秒，你的寿命就会减少一分钟。</span>",
+            "这太离谱了，系统发现<span class='highlight'>只要你不生病的话，你的身体就会一直保持健康状态！</span>",
+            "你是一个极度特立独行的人：<span class='highlight'>每次你花钱买东西的时候，你的钱居然都会变少！</span>",
+            "心理学无法解释你的行为：<span class='highlight'>当你左脚迈出去的时候，你的右脚竟然还会留在原地！</span>",
+            "震惊！你竟然是那种<span class='highlight'>睡着了之后，就会立刻进入睡眠状态的人！</span>"
+        ];
+
+        const conclusions = [
+            "这种千万分之一的概率，建议你平常一定要多喝热水，因为不喝就会口渴。",
+            "对此，专家的建议是：如果你不想醒着，最好去睡一觉。",
+            "所以请好好珍惜自己，毕竟像你这样的人，全世界只有你这一个你。",
+            "能拥有这种体质，说明当你没有说话的时候，你一直都在保持沉默。"
+        ];
+
+        const loadingMessages = [
+            "正在提取量子脑电波...",
+            "正在比对太平洋海报数据...",
+            "正在访问半人马座外星数据库...",
+            "正在用算盘进行高维度计算...",
+            "即将揭晓你的真实面目..."
+        ];
+
+        function startTest() {
+            const numInput = document.getElementById('user-number').value;
+            if(!numInput) {
+                alert("请输入一个数字，不要试图糊弄宇宙！");
+                return;
+            }
+
+            // 切换到加载界面
+            document.getElementById('input-screen').style.display = 'none';
+            document.getElementById('loading-screen').style.display = 'flex';
+
+            // 假装在加载的动画逻辑
+            let msgIndex = 0;
+            const msgEl = document.getElementById('loading-msg');
+            msgEl.innerText = loadingMessages[0];
+            
+            const msgInterval = setInterval(() => {
+                msgIndex++;
+                if(msgIndex < loadingMessages.length) {
+                    msgEl.innerText = loadingMessages[msgIndex];
+                }
+            }, 600);
+
+            // 2.5秒后显示结果
+            setTimeout(() => {
+                clearInterval(msgInterval);
+                generateResult(numInput);
+            }, 2500);
+        }
+
+        function generateResult(numStr) {
+            // 利用用户输入的数字来计算Hash，确保同一个数字每次测出来的结果固定（更有迷惑性）
+            let num = parseInt(numStr);
+            let hash = num * 37 + 11; // 随便写个算法打乱数字
+
+            // 1. 确定人格名称
+            const pIndex = hash % 16;
+            const personality = personalities[pIndex];
+
+            // 2. 拼凑废话文学
+            const introStr = intros[hash % intros.length].replace('{num}', numStr);
+            const coreStr = coreNonsense[(hash + 3) % coreNonsense.length];
+            const conclusionStr = conclusions[(hash + 7) % conclusions.length];
+            
+            const finalNonsense = `${introStr}<br><br>${coreStr}<br><br>${conclusionStr}`;
+
+            // 3. 渲染到页面
+            document.getElementById('p-name').innerText = personality;
+            document.getElementById('p-desc').innerHTML = finalNonsense;
+
+            // 切换UI
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+        }
+
+        function resetTest() {
+            document.getElementById('user-number').value = '';
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('input-screen').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
